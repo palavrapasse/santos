@@ -99,7 +99,7 @@ paths:
       parameters:
         - name: target
           in: query
-          description: Specifies the target leaks considered for filter
+          description: Specifies the target affected platforms considered for filter
           required: false
           explode: true
           schema:
