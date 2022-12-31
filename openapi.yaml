@@ -19,8 +19,6 @@ tags:
     description: Everything about Leaks
   - name: platforms
     description: Everything about Platforms
-  - name: subscriptions
-    description: Subscrition to new leaks
 paths:
   /leaks:
     get:
@@ -69,6 +67,28 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/requestBodies/LeaksArray'
+  /leaks/subscribe:
+    post:
+      tags:
+        - leaks
+      summary: Subscribes to new leaks
+      operationId: subscribe
+      requestBody:
+        description: Subscribe to new leaks
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Subscription'
+        required: true
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/requestBodies/SubscriptionConfirmation'
   /platforms:
     get:
       tags:
@@ -96,38 +116,6 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/requestBodies/PlatformsArray'
-  /subscriptions:
-    get:
-      tags:
-        - subscriptions
-      summary: Subscribes to new leaks
-      operationId: subscribe
-      parameters:
-        - name: email
-          in: query
-          description: Email that will receive the notification
-          required: false
-          explode: true
-          schema:
-            type: string
-        - name: affected
-          in: query
-          description: Affected emails that will be considered for the notification
-          required: false
-          explode: true
-          schema:
-            type: array
-            items: 
-              $ref: '#/components/schemas/Email'
-      responses:
-        '200':
-          description: successful operation
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/requestBodies/SubscriptionConfirmation'
 components:
   schemas:
     LeakId:
@@ -136,6 +124,17 @@ components:
       type: string
     Email:
       type: string
+    Subscription:
+      required:
+        - notifyEmail
+      type: object
+      properties:
+        notifyEmail: 
+          type: string
+        affectedEmails:
+          type: array
+          items:
+            type: string
   requestBodies:
     LeaksArray:
       description: List of leaks ids
