@@ -1,0 +1,161 @@
+openapi: 3.0.3
+info:
+  title: Swagger santos
+  description: |-
+    Monolith web api that serves the frontend.
+    
+    Some useful links:
+    - [Use Cases](https://github.com/palavrapasse/docs/blob/master/core/use-cases.md)
+    - [Entities](https://github.com/palavrapasse/docs/blob/master/core/entities.md)
+    - [Data Model](https://github.com/palavrapasse/docs/blob/master/core/data-model.md)
+  license:
+    name: MIT License
+    url: https://github.com/palavrapasse/santos/blob/master/LICENSE
+  version: 0.0.1
+servers:
+  - url: https://petstore3.swagger.io/api/v3
+tags:
+  - name: leaks
+    description: Everything about Leaks
+  - name: platforms
+    description: Everything about Platforms
+  - name: subscriptions
+    description: Subscrition to new leaks
+paths:
+  /leaks:
+    get:
+      tags:
+        - leaks
+      summary: Finds leaks
+      operationId: findLeaks
+      parameters:
+        - name: type
+          in: query
+          description: Type of information provided in affected
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: email
+            enum:
+              - email
+              - password
+        - name: affected
+          in: query
+          description: Values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: array
+            items: 
+              $ref: '#/components/schemas/Email'
+        - name: recent
+          in: query
+          description: Specifies if it should provide the most recent leaks
+          required: false
+          explode: true
+          schema:
+            type: boolean
+            default: false
+            enum:
+              - true
+              - false
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/requestBodies/LeaksArray'
+  /platforms:
+    get:
+      tags:
+        - platforms
+      summary: Finds affected platforms
+      operationId: findPlatforms
+      parameters:
+        - name: recent
+          in: query
+          description: Specifies if it should provide the most recent affected platforms
+          required: false
+          explode: true
+          schema:
+            type: boolean
+            default: false
+            enum:
+              - true
+              - false
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/requestBodies/PlatformsArray'
+  /subscriptions:
+    get:
+      tags:
+        - subscriptions
+      summary: Subscribes to new leaks
+      operationId: subscribe
+      parameters:
+        - name: email
+          in: query
+          description: Email that will receive the notification
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: affected
+          in: query
+          description: Affected emails that will be considered for the notification
+          required: false
+          explode: true
+          schema:
+            type: array
+            items: 
+              $ref: '#/components/schemas/Email'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/requestBodies/SubscriptionConfirmation'
+components:
+  schemas:
+    LeakId:
+      type: string
+    PlatformId:
+      type: string
+    Email:
+      type: string
+  requestBodies:
+    LeaksArray:
+      description: List of leaks ids
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/LeakId'
+    PlatformsArray:
+      description: List of platforms ids
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/PlatformId'
+    SubscriptionConfirmation:
+      description: Subscription confirmation
+      content:
+        application/json:
+          schema:
+            type: string
