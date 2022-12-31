@@ -82,14 +82,8 @@ paths:
               $ref: '#/components/schemas/Subscription'
         required: true
       responses:
-        '200':
+        '204':
           description: successful operation
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/requestBodies/SubscriptionConfirmation'
   /platforms:
     get:
       tags:
@@ -126,10 +120,8 @@ components:
         context: 
           type: string
           example: "Leak context"
-        shareDate:
-          type: string
-          format: date
-          example: "2022-12-31"
+        shareDateMSEpoch:
+          type: number
     Platform:
       type: string
       example: "Platform1"
