@@ -1,6 +1,6 @@
 openapi: 3.0.3
 info:
-  title: Swagger santos
+  title: Specification of the web API that allow users to query and subscribe leaks information
   description: |-
     Monolith web api that serves the frontend.
     
@@ -16,9 +16,9 @@ servers:
   - url: https://petstore3.swagger.io/api/v3
 tags:
   - name: leaks
-    description: Everything about Leaks
+    description: Leaks information query endpoints
   - name: platforms
-    description: Everything about Platforms
+    description: Leaks platforms information query endpoints
 paths:
   /leaks:
     get:
@@ -67,7 +67,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/requestBodies/LeaksArray'
+                  $ref: '#/components/schemas/Leak'
   /leaks/subscribe:
     post:
       tags:
@@ -117,15 +117,26 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/requestBodies/PlatformsArray'
+                  $ref: '#/components/schemas/Platform'
 components:
   schemas:
-    LeakId:
+    Leak:
+      type: object
+      properties:
+        context: 
+          type: string
+          example: "Leak context"
+        shareDate:
+          type: string
+          format: date
+          example: "2022-12-31"
+    Platform:
       type: string
-    PlatformId:
-      type: string
+      example: "Platform1"
     Email:
       type: string
+      format: email
+      example: "test@mail.com"
     Subscription:
       required:
         - notifyEmail
@@ -138,22 +149,6 @@ components:
           items:
             type: string
   requestBodies:
-    LeaksArray:
-      description: List of leaks ids
-      content:
-        application/json:
-          schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/LeakId'
-    PlatformsArray:
-      description: List of platforms ids
-      content:
-        application/json:
-          schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/PlatformId'
     SubscriptionConfirmation:
       description: Subscription confirmation
       content:
