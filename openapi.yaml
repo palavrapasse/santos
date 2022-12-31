@@ -47,17 +47,18 @@ paths:
             type: array
             items: 
               $ref: '#/components/schemas/Email'
-        - name: recent
+        - name: target
           in: query
-          description: Specifies if it should provide the most recent leaks
+          description: Specifies the target leaks considered for filter
           required: false
           explode: true
           schema:
-            type: boolean
-            default: false
+            type: string
+            default: all
             enum:
-              - true
-              - false
+              - all
+              - newest
+              - oldest
       responses:
         '200':
           description: successful operation
@@ -96,17 +97,18 @@ paths:
       summary: Finds affected platforms
       operationId: findPlatforms
       parameters:
-        - name: recent
+        - name: target
           in: query
-          description: Specifies if it should provide the most recent affected platforms
+          description: Specifies the target leaks considered for filter
           required: false
           explode: true
           schema:
-            type: boolean
-            default: false
+            type: string
+            default: all
             enum:
-              - true
-              - false
+              - all
+              - newest
+              - oldest
       responses:
         '200':
           description: successful operation
