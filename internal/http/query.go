@@ -14,4 +14,5 @@ var (
 	queryServerHost = os.Getenv(queryServerHostEnvKey)
 	queryServerPort = os.Getenv(queryServerPortEnvKey)
 	QueryServiceURL = fmt.Sprintf("%s:%s", queryServerHost, queryServerPort)
+	QueryServiceLeakPath = "/leaks"
 )
