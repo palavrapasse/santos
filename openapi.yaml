@@ -12,8 +12,6 @@ info:
     name: MIT License
     url: https://github.com/palavrapasse/santos/blob/master/LICENSE
   version: 0.0.1
-servers:
-  - url: https://petstore3.swagger.io/api/v3
 tags:
   - name: leaks
     description: Leaks information query endpoints
@@ -135,11 +133,11 @@ components:
       type: object
       properties:
         notifyEmail: 
-          type: string
+            $ref: '#/components/schemas/Email'
         affectedEmails:
           type: array
           items:
-            type: string
+            $ref: '#/components/schemas/Email'
   requestBodies:
     SubscriptionConfirmation:
       description: Subscription confirmation
