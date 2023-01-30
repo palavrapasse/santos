@@ -1,5 +1,5 @@
 package http
 
 const (
-	leaksRoute     = "/leaks"
+	leaksRoute = "/leaks"
 )
