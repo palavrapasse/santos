@@ -3,7 +3,7 @@ package http
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -20,7 +20,7 @@ func RegisterHandlers(e *echo.Echo) {
 func QueryLeaks(ectx echo.Context) error {
 	logging.Aspirador.Trace("Querying leaks")
 
-	url := QueryServiceURL + QueryServiceLeakPath + ectx.QueryString()
+	url := QueryServiceURL + QueryServiceLeakPath + "?" + ectx.QueryString()
 	logging.Aspirador.Info(fmt.Sprintf("Calling Query Service: %s", url))
 
 	resp, err := http.Get(url)
@@ -32,7 +32,7 @@ func QueryLeaks(ectx echo.Context) error {
 
 	defer resp.Body.Close()
 
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
 
 	if err != nil {
 		logging.Aspirador.Error(fmt.Sprintf("Error while reading body of Query Service response: %s", err))
