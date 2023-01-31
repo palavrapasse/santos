@@ -16,14 +16,24 @@ const (
 )
 
 var (
-	queryServerHost      = os.Getenv(queryServerHostEnvKey)
-	queryServerPort      = os.Getenv(queryServerPortEnvKey)
-	queryServiceURL      = fmt.Sprintf("%s:%s", queryServerHost, queryServerPort)
-	queryServiceLeakPath = "/leaks"
+	queryServerHost               = os.Getenv(queryServerHostEnvKey)
+	queryServerPort               = os.Getenv(queryServerPortEnvKey)
+	queryServiceURL               = fmt.Sprintf("%s:%s", queryServerHost, queryServerPort)
+	queryServiceLeaksEndpoint     = "/leaks"
+	queryServicePlatformsEndpoint = "/platforms"
 )
 
 func GetLeaks(query string) (interface{}, error) {
-	url := fmt.Sprintf("%s%s?%s", queryServiceURL, queryServiceLeakPath, query)
+	url := fmt.Sprintf("%s%s?%s", queryServiceURL, queryServiceLeaksEndpoint, query)
+	return httpGetQueryService(url)
+}
+
+func GetPlatforms(query string) (interface{}, error) {
+	url := fmt.Sprintf("%s%s?%s", queryServiceURL, queryServicePlatformsEndpoint, query)
+	return httpGetQueryService(url)
+}
+
+func httpGetQueryService(url string) (interface{}, error) {
 
 	logging.Aspirador.Info(fmt.Sprintf("Calling Query Service: %s", url))
 
@@ -45,10 +55,14 @@ func GetLeaks(query string) (interface{}, error) {
 
 	var response interface{}
 
-	err = json.Unmarshal(body, &response)
-	if err != nil {
-		logging.Aspirador.Error(fmt.Sprintf("Error while unmarshal body: %s", err))
-		return nil, err
+	logging.Aspirador.Info(fmt.Sprintf("Query Service response status: %d", resp.StatusCode))
+	if resp.StatusCode == http.StatusOK {
+		logging.Aspirador.Error(fmt.Sprintf("Error while reading body of Query Service response: %s", err))
+		err = json.Unmarshal(body, &response)
+		if err != nil {
+			logging.Aspirador.Error(fmt.Sprintf("Error while unmarshal body: %s", err))
+			return nil, err
+		}
 	}
 
 	logging.Aspirador.Trace("Received leaks from Query Service")

@@ -10,6 +10,7 @@ import (
 func RegisterHandlers(e *echo.Echo) {
 
 	e.GET(leaksRoute, QueryLeaks)
+	e.GET(platformsRoute, QueryPlatforms)
 
 	echo.NotFoundHandler = useNotFoundHandler()
 }
@@ -24,6 +25,20 @@ func QueryLeaks(ectx echo.Context) error {
 	}
 
 	logging.Aspirador.Trace("Success in querying leaks")
+
+	return Ok(ectx, response)
+}
+
+func QueryPlatforms(ectx echo.Context) error {
+	logging.Aspirador.Trace("Querying Platforms")
+
+	response, err := GetPlatforms(ectx.QueryString())
+
+	if err != nil {
+		return InternalServerError(ectx)
+	}
+
+	logging.Aspirador.Trace("Success in querying platforms")
 
 	return Ok(ectx, response)
 }
