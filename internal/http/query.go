@@ -1,9 +1,7 @@
 package http
 
 import (
-	"encoding/json"
 	"fmt"
-	"io"
 	"net/http"
 	"os"
 
@@ -23,17 +21,17 @@ var (
 	queryServicePlatformsEndpoint = "/platforms"
 )
 
-func GetLeaks(query string) (interface{}, error) {
+func GetLeaks(query string) (*http.Response, error) {
 	url := fmt.Sprintf("%s%s?%s", queryServiceURL, queryServiceLeaksEndpoint, query)
 	return httpGetQueryService(url)
 }
 
-func GetPlatforms(query string) (interface{}, error) {
+func GetPlatforms(query string) (*http.Response, error) {
 	url := fmt.Sprintf("%s%s?%s", queryServiceURL, queryServicePlatformsEndpoint, query)
 	return httpGetQueryService(url)
 }
 
-func httpGetQueryService(url string) (interface{}, error) {
+func httpGetQueryService(url string) (*http.Response, error) {
 
 	logging.Aspirador.Info(fmt.Sprintf("Calling Query Service: %s", url))
 
@@ -44,28 +42,7 @@ func httpGetQueryService(url string) (interface{}, error) {
 		return nil, err
 	}
 
-	defer resp.Body.Close()
-
-	body, err := io.ReadAll(resp.Body)
-
-	if err != nil {
-		logging.Aspirador.Error(fmt.Sprintf("Error while reading body of Query Service response: %s", err))
-		return nil, err
-	}
-
-	var response interface{}
-
 	logging.Aspirador.Info(fmt.Sprintf("Query Service response status: %d", resp.StatusCode))
-	if resp.StatusCode == http.StatusOK {
-		logging.Aspirador.Error(fmt.Sprintf("Error while reading body of Query Service response: %s", err))
-		err = json.Unmarshal(body, &response)
-		if err != nil {
-			logging.Aspirador.Error(fmt.Sprintf("Error while unmarshal body: %s", err))
-			return nil, err
-		}
-	}
 
-	logging.Aspirador.Trace("Received leaks from Query Service")
-
-	return response, nil
+	return resp, nil
 }

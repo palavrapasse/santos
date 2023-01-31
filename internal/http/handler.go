@@ -1,6 +1,8 @@
 package http
 
 import (
+	"fmt"
+	"io"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -24,9 +26,16 @@ func QueryLeaks(ectx echo.Context) error {
 		return InternalServerError(ectx)
 	}
 
+	body, err := io.ReadAll(response.Body)
+
+	if err != nil {
+		logging.Aspirador.Error(fmt.Sprintf("Error while reading body of Query Service response: %s", err))
+		return InternalServerError(ectx)
+	}
+
 	logging.Aspirador.Trace("Success in querying leaks")
 
-	return Ok(ectx, response)
+	return ectx.JSONBlob(response.StatusCode, body)
 }
 
 func QueryPlatforms(ectx echo.Context) error {
@@ -38,9 +47,16 @@ func QueryPlatforms(ectx echo.Context) error {
 		return InternalServerError(ectx)
 	}
 
+	body, err := io.ReadAll(response.Body)
+
+	if err != nil {
+		logging.Aspirador.Error(fmt.Sprintf("Error while reading body of Query Service response: %s", err))
+		return InternalServerError(ectx)
+	}
+
 	logging.Aspirador.Trace("Success in querying platforms")
 
-	return Ok(ectx, response)
+	return ectx.JSONBlob(response.StatusCode, body)
 }
 
 func useNotFoundHandler() func(c echo.Context) error {
