@@ -1,9 +1,6 @@
 package http
 
 import (
-	"encoding/json"
-	"fmt"
-	"io"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -20,36 +17,15 @@ func RegisterHandlers(e *echo.Echo) {
 func QueryLeaks(ectx echo.Context) error {
 	logging.Aspirador.Trace("Querying leaks")
 
-	url := QueryServiceURL + QueryServiceLeakPath + "?" + ectx.QueryString()
-	logging.Aspirador.Info(fmt.Sprintf("Calling Query Service: %s", url))
-
-	resp, err := http.Get(url)
+	response, err := GetLeaks(ectx.QueryString())
 
 	if err != nil {
-		logging.Aspirador.Error(fmt.Sprintf("Error while calling Query Service: %s", err))
-		return InternalServerError(ectx)
-	}
-
-	defer resp.Body.Close()
-
-	body, err := io.ReadAll(resp.Body)
-
-	if err != nil {
-		logging.Aspirador.Error(fmt.Sprintf("Error while reading body of Query Service response: %s", err))
 		return InternalServerError(ectx)
 	}
 
 	logging.Aspirador.Trace("Success in querying leaks")
 
-	var data interface{}
-
-	err = json.Unmarshal(body, &data)
-	if err != nil {
-		logging.Aspirador.Error(fmt.Sprintf("Error while unmarshal body: %s", err))
-		return InternalServerError(ectx)
-	}
-
-	return Ok(ectx, data)
+	return Ok(ectx, response)
 }
 
 func useNotFoundHandler() func(c echo.Context) error {
