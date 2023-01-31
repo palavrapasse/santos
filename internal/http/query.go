@@ -23,7 +23,8 @@ var (
 )
 
 func GetLeaks(query string) (interface{}, error) {
-	url := queryServiceURL + queryServiceLeakPath + "?" + query
+	url := fmt.Sprintf("%s%s?%s", queryServiceURL, queryServiceLeakPath, query)
+
 	logging.Aspirador.Info(fmt.Sprintf("Calling Query Service: %s", url))
 
 	resp, err := http.Get(url)
