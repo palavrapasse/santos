@@ -4,7 +4,7 @@ WORKDIR /app
 RUN --mount=type=secret,id=git-credentials cp /run/secrets/git-credentials ~/.git-credentials
 
 # todo: remove this after repositories are public (+ git-credentials)
-RUN apk add gi
+RUN apk add git
 RUN git config --global credential.helper store
 
 COPY go.mod ./
