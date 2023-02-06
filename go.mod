@@ -6,6 +6,7 @@ require (
 	github.com/joho/godotenv v1.4.0
 	github.com/labstack/echo/v4 v4.10.0
 	github.com/palavrapasse/aspirador v0.0.1
+	golang.org/x/time v0.2.0
 )
 
 require (
