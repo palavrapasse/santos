@@ -52,13 +52,15 @@ func NewEndpointThrottlingLimiter(req http.Request) EndpointThrottlingLimiter {
 	case platformsRoute:
 		etc = createPlatformsThrottlingConfig()
 	case leaksRoute:
-	default:
 		etc = createLeaksEndpointThrottlingConfig()
 	}
 
 	return EndpointThrottlingLimiter{
-		limiter: rate.NewLimiter(),
-		config:  etc,
+		limiter: rate.NewLimiter(
+			rate.Every(time.Second*time.Duration(etc.timePeriodSec)),
+			etc.maxRequests,
+		),
+		config: etc,
 	}
 }
 
