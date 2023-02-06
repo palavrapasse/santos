@@ -21,31 +21,67 @@ const (
 )
 
 type ThrottlingEngine struct {
-	visitors      map[string]EndpointThrottlingLimiter
-	visitorsMutex *sync.Mutex
+	Visitors      map[string]EndpointThrottlingLimiter
+	VisitorsMutex *sync.Mutex
 }
 
 type EndpointThrottlingConfig struct {
-	endpoint      string
-	method        string
-	maxRequests   int
-	timePeriodSec int
+	Endpoint      string
+	Method        string
+	MaxRequests   int
+	TimePeriodSec int
 }
 
 type EndpointThrottlingLimiter struct {
-	limiter           *rate.Limiter
-	config            EndpointThrottlingConfig
-	endingTimeLimiter time.Time
+	Limiter *rate.Limiter
+	Config  EndpointThrottlingConfig
 }
 
 func NewThrottlingEngine() ThrottlingEngine {
 	return ThrottlingEngine{
-		visitors:      map[string]EndpointThrottlingLimiter{},
-		visitorsMutex: &sync.Mutex{},
+		Visitors:      map[string]EndpointThrottlingLimiter{},
+		VisitorsMutex: &sync.Mutex{},
 	}
 }
 
 func NewEndpointThrottlingLimiter(req http.Request) EndpointThrottlingLimiter {
+	etc := requestThrottlingConfig(req)
+
+	r := rate.Every(time.Second * time.Duration(etc.TimePeriodSec))
+	b := etc.MaxRequests
+
+	return EndpointThrottlingLimiter{
+		Limiter: rate.NewLimiter(r, b),
+		Config:  etc,
+	}
+}
+
+func (te *ThrottlingEngine) CanAllowRequest(req http.Request) bool {
+	id := requestId(req)
+
+	etl, ok := te.Visitors[id]
+
+	if !ok {
+		te.VisitorsMutex.Lock()
+		defer te.VisitorsMutex.Unlock()
+
+		etl = NewEndpointThrottlingLimiter(req)
+		te.Visitors[id] = etl
+	}
+
+	return etl.Limiter.Allow()
+}
+
+func requestId(req http.Request) string {
+	ipextr := echo.ExtractIPDirect()
+	ip := ipextr(&req)
+
+	id := fmt.Sprintf("%s%s", ip, req.Method)
+
+	return id
+}
+
+func requestThrottlingConfig(req http.Request) EndpointThrottlingConfig {
 	var etc EndpointThrottlingConfig
 
 	switch req.URL.Path {
@@ -55,47 +91,23 @@ func NewEndpointThrottlingLimiter(req http.Request) EndpointThrottlingLimiter {
 		etc = createLeaksEndpointThrottlingConfig()
 	}
 
-	return EndpointThrottlingLimiter{
-		limiter: rate.NewLimiter(
-			rate.Every(time.Second*time.Duration(etc.timePeriodSec)),
-			etc.maxRequests,
-		),
-		config: etc,
-	}
-}
-
-func (te *ThrottlingEngine) CanAllowRequest(req http.Request) bool {
-	ipextr := echo.ExtractIPDirect()
-	ip := ipextr(&req)
-	id := fmt.Sprintf("%s%s", ip, req.Method)
-
-	te.visitorsMutex.Lock()
-	defer te.visitorsMutex.Unlock()
-
-	etl, ok := te.visitors[id]
-
-	if !ok {
-		etl = NewEndpointThrottlingLimiter(req)
-		te.visitors[id] = etl
-	}
-
-	return etl.limiter.Allow()
+	return etc
 }
 
 func createLeaksEndpointThrottlingConfig() EndpointThrottlingConfig {
 	return EndpointThrottlingConfig{
-		endpoint:      leaksRoute,
-		method:        http.MethodGet,
-		maxRequests:   leaksEndpointMaxRequestsPerTimePeriod,
-		timePeriodSec: leaksEndpointMaxRequestsTimePeriod,
+		Endpoint:      leaksRoute,
+		Method:        http.MethodGet,
+		MaxRequests:   leaksEndpointMaxRequestsPerTimePeriod,
+		TimePeriodSec: leaksEndpointMaxRequestsTimePeriod,
 	}
 }
 
 func createPlatformsThrottlingConfig() EndpointThrottlingConfig {
 	return EndpointThrottlingConfig{
-		endpoint:      platformsRoute,
-		method:        http.MethodGet,
-		maxRequests:   platformsEndpointMaxRequestsPerTimePeriod,
-		timePeriodSec: platformsEndpointMaxRequestsTimePeriod,
+		Endpoint:      platformsRoute,
+		Method:        http.MethodGet,
+		MaxRequests:   platformsEndpointMaxRequestsPerTimePeriod,
+		TimePeriodSec: platformsEndpointMaxRequestsTimePeriod,
 	}
 }
