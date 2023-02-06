@@ -32,13 +32,13 @@ func throttlingMiddleware() echo.MiddlewareFunc {
 		return func(ectx echo.Context) error {
 			req := ectx.Request()
 
-			if te.CanAllowRequest(*req) {
-				return next(ectx)
-			} else {
+			if !te.CanAllowRequest(*req) {
 				logging.Aspirador.Warning(fmt.Sprintf("denying request for %s endpoint, too many requests (429)", req.URL.Path))
 
 				return TooManyRequests(ectx)
 			}
+
+			return next(ectx)
 		}
 	}
 }
