@@ -1,6 +1,7 @@
 package http
 
 const (
-	leaksRoute     = "/leaks"
-	platformsRoute = "/platforms"
+	leaksRoute       = "/leaks"
+	platformsRoute   = "/platforms"
+	healthCheckRoute = "/health"
 )
