@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/labstack/echo/v4"
+	"github.com/palavrapasse/paramedic/pkg"
 	"github.com/palavrapasse/santos/internal/logging"
 )
 
@@ -13,6 +14,7 @@ func RegisterHandlers(e *echo.Echo) {
 
 	e.GET(leaksRoute, QueryLeaks)
 	e.GET(platformsRoute, QueryPlatforms)
+	e.GET(healthCheckRoute, QueryHealthCheck)
 
 	echo.NotFoundHandler = useNotFoundHandler()
 }
@@ -57,6 +59,19 @@ func QueryPlatforms(ectx echo.Context) error {
 	logging.Aspirador.Trace("Success in querying platforms")
 
 	return ectx.JSONBlob(response.StatusCode, body)
+}
+
+func QueryHealthCheck(ectx echo.Context) error {
+
+	result, err := pkg.CheckHealth()
+
+	if err != nil {
+		return InternalServerError(ectx)
+	}
+
+	logging.Aspirador.Trace(fmt.Sprintf("%v", result))
+
+	return Ok(ectx, result)
 }
 
 func useNotFoundHandler() func(c echo.Context) error {
