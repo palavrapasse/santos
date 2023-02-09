@@ -10,8 +10,8 @@ import (
 
 func RegisterMiddlewares(e *echo.Echo) {
 	e.Use(loggingMiddleware())
-	e.Use(throttlingMiddleware())
 	e.Use(corsMiddleware())
+	e.Use(throttlingMiddleware())
 }
 
 func loggingMiddleware() echo.MiddlewareFunc {
