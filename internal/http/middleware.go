@@ -4,12 +4,14 @@ import (
 	"fmt"
 
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 	"github.com/palavrapasse/santos/internal/logging"
 )
 
 func RegisterMiddlewares(e *echo.Echo) {
 	e.Use(loggingMiddleware())
 	e.Use(throttlingMiddleware())
+	e.Use(corsMiddleware())
 }
 
 func loggingMiddleware() echo.MiddlewareFunc {
@@ -41,4 +43,8 @@ func throttlingMiddleware() echo.MiddlewareFunc {
 			return next(ectx)
 		}
 	}
+}
+
+func corsMiddleware() echo.MiddlewareFunc {
+	return middleware.CORSWithConfig(CORSConfig())
 }
