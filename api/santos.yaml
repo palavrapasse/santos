@@ -110,6 +110,19 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Platform'
+  /health:
+    get:
+      tags:
+        - health check
+      summary: Provides the information about the health of the service
+      operationId: healthcheck
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Health'
 components:
   schemas:
     Leak:
@@ -138,6 +151,29 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Email'
+    Health:
+      type: object
+      properties:
+        cpu:
+          type: number
+          format: float
+          example: 8
+        cpuPercentage:
+          type: number
+          format: float
+          example: 11,74
+        ram:
+          type: number
+          format: float
+          example: 12723146752
+        ramPercentage:
+          type: number
+          format: float
+          example: 75,00
+        ramMax:
+          type: number
+          format: float
+          example: 157850401920
   requestBodies:
     SubscriptionConfirmation:
       description: Subscription confirmation
