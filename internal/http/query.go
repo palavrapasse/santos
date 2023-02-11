@@ -35,7 +35,7 @@ func httpGetQueryService(url string) (*http.Response, error) {
 
 	logging.Aspirador.Info(fmt.Sprintf("Calling Query Service: %s", url))
 
-	resp, err := http.Get(url)
+	resp, err := secondLevelApiClient.Get(url)
 
 	if err != nil {
 		logging.Aspirador.Error(fmt.Sprintf("Error while calling Query Service: %s", err))
