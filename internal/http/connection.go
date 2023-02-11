@@ -5,34 +5,30 @@ import (
 	"os"
 
 	"github.com/labstack/echo/v4"
-	"golang.org/x/crypto/acme/autocert"
 )
 
 const (
-	serverHostEnvKey                = "server_host"
-	serverPortEnvKey                = "server_port"
-	serverDomainEnvKey              = "server_domain"
-	serverAutoCertDirFilePathEnvKey = "server_autocrt_cache_dir_fp"
+	serverHostEnvKey         = "server_host"
+	serverPortEnvKey         = "server_port"
+	serverTLSCertFilePathKey = "server_tls_crt_fp"
+	serverTLSKeyFilePathKey  = "server_tls_key_fp"
 )
 
 var (
-	serverHost                      = os.Getenv(serverHostEnvKey)
-	serverPort                      = os.Getenv(serverPortEnvKey)
-	serverDomain                    = os.Getenv(serverDomainEnvKey)
-	serverAutoCertDirectoryFilePath = os.Getenv(serverAutoCertDirFilePathEnvKey)
+	serverHost            = os.Getenv(serverHostEnvKey)
+	serverPort            = os.Getenv(serverPortEnvKey)
+	serverTLSCertFilePath = os.Getenv(serverTLSCertFilePathKey)
+	serverTLSKeyFilePath  = os.Getenv(serverTLSKeyFilePathKey)
 )
 
 func Start(e *echo.Echo) error {
 	addr := serverAddress()
 
-	if len(serverDomain) > 0 {
-		e.AutoTLSManager.HostPolicy = autocert.HostWhitelist(serverDomain)
-		e.AutoTLSManager.Cache = autocert.DirCache(serverAutoCertDirectoryFilePath)
-
-		return e.StartAutoTLS(addr)
+	if len(serverTLSCertFilePath) == 0 {
+		return e.Start(addr)
 	}
 
-	return e.Start(addr)
+	return e.StartTLS(addr, serverTLSCertFilePath, serverTLSKeyFilePath)
 }
 
 func serverAddress() string {
