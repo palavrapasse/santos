@@ -1,6 +1,8 @@
 # Server configuration
 server_host=0.0.0.0
 server_port=9090
+server_domain=
+server_autocrt_cache_dir_fp=
 
 # Query Server configuration
 query_server_host=0.0.0.0
