@@ -18,8 +18,8 @@ github.com/mattn/go-isatty v0.0.14/go.mod h1:7GGIvUiUoEMVVmxf/4nioHXj79iQHKdU27k
 github.com/mattn/go-isatty v0.0.16/go.mod h1:kYGgaQfpe5nmfYZH+SKPsOc2e4SrIfOl2e/yFXSvRLM=
 github.com/mattn/go-isatty v0.0.17 h1:BTarxUcIeDqL27Mc+vyvdWYSL28zpIhv3RoTdsLMPng=
 github.com/mattn/go-isatty v0.0.17/go.mod h1:kYGgaQfpe5nmfYZH+SKPsOc2e4SrIfOl2e/yFXSvRLM=
-github.com/palavrapasse/aspirador v0.0.1 h1:PqdnHweSXfvYITOgOQC0JAXD3GeYV2x+rc4Sce7q0Vw=
-github.com/palavrapasse/aspirador v0.0.1/go.mod h1:1LJFZgJoNr7In+g3PQHWwK6/Dha9jsiTT2jMV/eiAX8=
+github.com/palavrapasse/aspirador v0.0.2 h1:50uj+MKmdOHxR4EswO9N0UKmR0jyy7NA532QhB4cOGk=
+github.com/palavrapasse/aspirador v0.0.2/go.mod h1:1LJFZgJoNr7In+g3PQHWwK6/Dha9jsiTT2jMV/eiAX8=
 github.com/palavrapasse/paramedic v0.0.2 h1:me4aiMhaodLR+1gHETbTzBbtLKPb2dXBTtcz+IfnLuA=
 github.com/palavrapasse/paramedic v0.0.2/go.mod h1:K66P+Y29y+2j8/DS8LWTx/PmUytiZhIURN1U0r+Ji5o=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
