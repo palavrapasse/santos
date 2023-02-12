@@ -5,6 +5,7 @@ import (
 	"net/http"
 )
 
+// #nosec
 var secondLevelApiClient = &http.Client{
 	Transport: &http.Transport{
 		TLSClientConfig: &tls.Config{

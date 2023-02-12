@@ -175,12 +175,12 @@ linters-settings:
     # Default: the number of logical CPUs usable by the current process.
     concurrency: 4
     # To specify the configuration of rules.
-    # config:
-    #   # Globals are applicable to all rules.
-    #   global:
-    #     # If true, ignore #nosec in comments (and an alternative as well).
-    #     # Default: false
-    #     nosec: true
+    config:
+      #   # Globals are applicable to all rules.
+      global:
+        #     # If true, ignore #nosec in comments (and an alternative as well).
+        #     # Default: false
+        nosec: true
     #     # Add an alternative comment prefix to #nosec (both will work at the same time).
     #     # Default: ""
     #     "#nosec": "#my-custom-nosec"
