@@ -42,6 +42,8 @@ export $(grep -v '^#' .env | xargs)
 
 docker run \
     -p $server_port:$server_port \
+    --mount "type=bind,src=$server_tls_crt_fp,dst=$server_tls_crt_fp" \
+    --mount "type=bind,src=$server_tls_key_fp,dst=$server_tls_key_fp" \
     --env-file .env \
     -t $docker_tag
 ```
