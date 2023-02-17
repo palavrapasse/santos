@@ -20,7 +20,7 @@ const (
 	platformsEndpointMaxRequestsTimePeriod = 5
 )
 
-const throttlingEngineVisitorsCleanUpMinutes = 1
+const throttlingEngineVisitorsCleanUpMinutes = 3
 
 type ThrottlingEngine struct {
 	Visitors      map[string]EndpointThrottlingLimiter
