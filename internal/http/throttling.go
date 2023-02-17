@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"github.com/labstack/echo/v4"
-	"github.com/palavrapasse/santos/internal/logging"
 	"golang.org/x/time/rate"
 )
 
@@ -37,8 +36,8 @@ type EndpointThrottlingConfig struct {
 
 type EndpointThrottlingLimiter struct {
 	Limiter  *rate.Limiter
-	Config   EndpointThrottlingConfig
 	LastSeen time.Time
+	Config   EndpointThrottlingConfig
 }
 
 func NewThrottlingEngine() ThrottlingEngine {
