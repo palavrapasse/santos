@@ -30,7 +30,7 @@ func loggingMiddleware() echo.MiddlewareFunc {
 func throttlingMiddleware() echo.MiddlewareFunc {
 	te := NewThrottlingEngine()
 
-	StartThrottlingEngineCleanUp(&te)
+	te.StartThrottlingEngineCleanUp()
 
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(ectx echo.Context) error {

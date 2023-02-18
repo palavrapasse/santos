@@ -20,7 +20,10 @@ const (
 	platformsEndpointMaxRequestsTimePeriod = 5
 )
 
-const throttlingEngineVisitorsCleanUpMinutes = 3
+const (
+	throttlingEngineVisitorsCleanUpMinutes = 3
+	throttlingEngineCleanUpTimePeriod      = 2
+)
 
 type ThrottlingEngine struct {
 	Visitors      map[string]EndpointThrottlingLimiter
@@ -60,7 +63,7 @@ func NewEndpointThrottlingLimiter(req http.Request) EndpointThrottlingLimiter {
 	}
 }
 
-func StartThrottlingEngineCleanUp(te *ThrottlingEngine) {
+func (te *ThrottlingEngine) StartThrottlingEngineCleanUp() {
 	go te.cleanupThrottlingEngine()
 }
 
@@ -85,7 +88,7 @@ func (te *ThrottlingEngine) CanAllowRequest(req http.Request) bool {
 
 func (te *ThrottlingEngine) cleanupThrottlingEngine() {
 	for {
-		time.Sleep(time.Minute)
+		time.Sleep(throttlingEngineCleanUpTimePeriod * time.Minute)
 
 		te.VisitorsMutex.Lock()
 
