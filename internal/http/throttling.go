@@ -21,8 +21,8 @@ const (
 )
 
 const (
-	throttlingEngineVisitorsCleanUpMinutes = 3
-	throttlingEngineCleanUpTimePeriod      = 2
+	throttlingEngineVisitorsCleanUpMinutes   = 3
+	throttlingEngineCleanUpTimePeriodMinutes = 2
 )
 
 type ThrottlingEngine struct {
@@ -88,7 +88,7 @@ func (te *ThrottlingEngine) CanAllowRequest(req http.Request) bool {
 
 func (te *ThrottlingEngine) cleanupThrottlingEngine() {
 	for {
-		time.Sleep(throttlingEngineCleanUpTimePeriod * time.Minute)
+		time.Sleep(throttlingEngineCleanUpTimePeriodMinutes * time.Minute)
 
 		te.VisitorsMutex.Lock()
 
